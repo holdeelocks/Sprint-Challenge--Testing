@@ -22,7 +22,7 @@ server.post('/api/games', async (req, res) => {
 	}
 });
 
-server.get('/games/:id', async (req, res) => {
+server.get('/api/games/:id', async (req, res) => {
 	const { id } = req.params;
 	try {
 		const game = await db('games')
@@ -41,6 +41,23 @@ server.get('/games/:id', async (req, res) => {
 server.get('/api/games', async (req, res) => {
 	const games = await db('games');
 	res.status(200).json(games);
+});
+
+server.delete('/api/games/:id', async (req, res) => {
+	const { id } = req.params;
+	try {
+		const ids = await db('games')
+			.where({ id })
+			.del();
+		if (!ids) {
+			res.status(404).end();
+		} else {
+			console.log(ids);
+			res.status(200).json(ids);
+		}
+	} catch (err) {
+		res.status(500).end();
+	}
 });
 
 module.exports = server;

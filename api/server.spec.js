@@ -9,7 +9,7 @@ afterEach(async () => {
 describe('GET /games/:id endpoint', async () => {
 	it('should return 404 when id does not exist', async () => {
 		const id = 4;
-		let response = await request(server).get(`/games/${id}`);
+		let response = await request(server).get(`/api/games/${id}`);
 
 		expect(response.status).toBe(422);
 	});
@@ -19,7 +19,7 @@ describe('GET /games/:id endpoint', async () => {
 			.post('/api/games')
 			.send({ title: 'Teenage Mutant Ninja Turtles', genre: 'Fighting' });
 
-		const response = await request(server).get(`/games/${id}`);
+		const response = await request(server).get(`/api/games/${id}`);
 
 		expect(response.body).toEqual({
 			title: 'Teenage Mutant Ninja Turtles',
@@ -108,5 +108,25 @@ describe('POST /games endpoint', () => {
 			.send({ title: 'Mortal Kombat 3', genre: 'Fighting' });
 
 		expect(response.status).toBe(405);
+	});
+});
+
+describe('DELETE /games/:id endpoint', () => {
+	it('should respond with 404 if no game', async () => {
+		const id = 10;
+		const response = await request(server).delete(`/api/games/${id}`);
+
+		expect(response.status).toBe(404);
+	});
+
+	it('should respond with 200 if deleted', async () => {
+		let id = 1;
+		let added = await request(server)
+			.post('/api/games')
+			.send({ title: 'Mortal Kombat 3', genre: 'Fighting' });
+
+		let response = await request(server).delete(`/api/games/${id}`);
+		expect(response.status).toBe(200);
+		expect(response.body).toBe(id);
 	});
 });
