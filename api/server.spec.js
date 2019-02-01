@@ -70,4 +70,18 @@ describe('POST /games endpoint', () => {
 			genre: 'Fighting'
 		});
 	});
+
+	it('should send back 405 for non unique game title', async () => {
+		let response = await request(server)
+			.post('/api/games')
+			.send({ title: 'Mortal Kombat 3', genre: 'Fighting' });
+
+		expect(response.status).toBe(201);
+
+		response = await request(server)
+			.post('/api/games')
+			.send({ title: 'Mortal Kombat 3', genre: 'Fighting' });
+
+		expect(response.status).toBe(405);
+	});
 });

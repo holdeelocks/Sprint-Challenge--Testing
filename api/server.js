@@ -10,11 +10,15 @@ server.post('/api/games', async (req, res) => {
 	if (!title || !genre) {
 		res.status(422).end();
 	} else {
-		const [id] = await db('games').insert(req.body);
-		const newGame = await db('games')
-			.where({ id })
-			.first();
-		res.status(201).json(newGame);
+		try {
+			const [id] = await db('games').insert(req.body);
+			const newGame = await db('games')
+				.where({ id })
+				.first();
+			res.status(201).json(newGame);
+		} catch (err) {
+			res.status(405).end();
+		}
 	}
 });
 
