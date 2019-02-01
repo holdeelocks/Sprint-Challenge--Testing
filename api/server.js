@@ -22,6 +22,22 @@ server.post('/api/games', async (req, res) => {
 	}
 });
 
+server.get('/games/:id', async (req, res) => {
+	const { id } = req.params;
+	try {
+		const game = await db('games')
+			.where({ id })
+			.first();
+		if (!game) {
+			res.status(422).end();
+		} else {
+			res.status(200).json(game);
+		}
+	} catch (err) {
+		res.status(500).end();
+	}
+});
+
 server.get('/api/games', async (req, res) => {
 	const games = await db('games');
 	res.status(200).json(games);

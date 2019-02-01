@@ -6,6 +6,30 @@ afterEach(async () => {
 	await db('games').truncate();
 });
 
+describe('GET /games/:id endpoint', async () => {
+	it('should return 404 when id does not exist', async () => {
+		const id = 4;
+		let response = await request(server).get(`/games/${id}`);
+
+		expect(response.status).toBe(422);
+	});
+	it('should respond with the game info', async () => {
+		const id = 1;
+		const addGame = await request(server)
+			.post('/api/games')
+			.send({ title: 'Teenage Mutant Ninja Turtles', genre: 'Fighting' });
+
+		const response = await request(server).get(`/games/${id}`);
+
+		expect(response.body).toEqual({
+			title: 'Teenage Mutant Ninja Turtles',
+			genre: 'Fighting',
+			releaseYear: null,
+			id: 1
+		});
+	});
+});
+
 describe('GET /games endpoint', () => {
 	it('should return status code 200', async () => {
 		let response = await request(server).get('/api/games');
