@@ -13,7 +13,7 @@ describe('GET /games/:id endpoint', async () => {
 
 		expect(response.status).toBe(422);
 	});
-	it('should respond with the game info', async () => {
+	it('should respond with the game info and 200 status', async () => {
 		const id = 1;
 		const addGame = await request(server)
 			.post('/api/games')
@@ -27,6 +27,7 @@ describe('GET /games/:id endpoint', async () => {
 			releaseYear: null,
 			id: 1
 		});
+		expect(response.status).toBe(200);
 	});
 });
 
